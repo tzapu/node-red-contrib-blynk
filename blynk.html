@@ -135,7 +135,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="blynk-write">
-   <p>Use Blynk Write to send a value to the Blynk app</p>
+   <p>Use Blynk Write to send payload to the Blynk app virtual pin</p>
 </script>
 
 <script type="text/javascript">
@@ -177,7 +177,7 @@
             key: {value: "", required:true}
         },
 		label: function() {
-			return("blynk@"+this.key);
+			return("key: " + this.key);
 		}
     });
 </script>

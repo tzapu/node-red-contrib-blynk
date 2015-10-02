@@ -89,7 +89,7 @@ module.exports = function(RED) {
 		this.on("input", function(msg) {
 			console.log('input on virtual write');
             if ( msg.hasOwnProperty("payload")) {
-				pins[node.pin].write(new Date().getSeconds());
+				pins[node.pin].write(msg.payload);
             } else {
 	            node.warn(RED._("blynk.errors.invalid-payload")); 
             }	        

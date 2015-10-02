@@ -21,8 +21,9 @@
   },
   "homepage": "https://github.com/tzapu/node-red-contrib-blynk",
   "dependencies": {
-    "blynk-library": "0.0.16"
-  }
+    "blynk-library": "~0.0.16",
+    "path": ""
+  },
   "node-red": {
   	"nodes": {
     	"blynk": "blynk.js"
