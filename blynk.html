@@ -1,0 +1,184 @@
+<!-- First, the content of the edit dialog is defined.                       -->
+<script type="text/x-red" data-template-name="blynk-read-event">
+   <!-- data-template-name identifies the node type this is for              -->
+
+   <!-- Each of the following divs creates a field in the edit dialog.       -->
+   <!-- Generally, there should be an input for each property of the node.   -->
+   <!-- The for and id attributes identify the corresponding property        -->
+   <!-- (with the 'node-input-' prefix).                                     -->
+   <!-- The available icon classes are defined Twitter Bootstrap glyphicons  -->
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+   
+    <div class="form-row">
+        <label for="node-input-pin"><i class="fa fa-tasks"></i> Virtual Pin</label>
+        <input type="text" id="node-input-pin" placeholder="number">
+    </div>
+
+    <br/>
+    <!-- By convention, most nodes have a 'name' property. The following div -->
+    <!-- provides the necessary field. Should always be the last option      -->
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+
+<!-- Next, some simple help text is provided for the node.                   -->
+<script type="text/x-red" data-help-name="blynk-read-event">
+   <!-- data-help-name identifies the node type this help is for             -->
+   <!-- This content appears in the Info sidebar when a node is selected     -->
+   <!-- The first <p> is used as the pop-up tool tip when hovering over a    -->
+   <!-- node in the palette.                                                 -->
+   <p>Read Event gets called by the Blynk App whenever it needs to get the value of a Pin</p>
+</script>
+
+<!-- Finally, the node type is registered along with all of its properties   -->
+<!-- The example below shows a small subset of the properties that can be set-->
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-read-event',{
+        category: 'blynk',      // the palette category
+        paletteLabel: 'read event',
+        color: '#3FADB5',
+        icon: "bridge.png",     // saved in  icons/myicon.png
+        inputs:0,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        label: function() {     // sets the default label contents
+            return this.name||this.pin||"no pin";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            server: {value:"", type:"blynk-server"},
+            pin: {value:"", required:true, validate:function(v) { return (!isNaN(parseFloat(v)) && v >= 0 && v < 32) }}
+        }
+    });
+</script>
+
+
+
+
+<!-- Blynk Write Event -->
+<script type="text/x-red" data-template-name="blynk-write-event">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+   
+    <div class="form-row">
+        <label for="node-input-pin"><i class="fa fa-tasks"></i> Virtual Pin</label>
+        <input type="text" id="node-input-pin" placeholder="number">
+    </div>
+
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+
+<script type="text/x-red" data-help-name="blynk-write-event">
+   <p>Write Event gets called by the Blynk App whenever it needs to write/change the value of a Pin</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-write-event',{
+        category: 'blynk',      // the palette category
+        paletteLabel: 'write event',
+        color: '#3FADB5',
+        icon: "bridge.png",     // saved in  icons/myicon.png
+        inputs:0,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        label: function() {     // sets the default label contents
+            return this.name||this.pin||"no pin";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            server: {value:"", type:"blynk-server"},
+            pin: {value:"", required:true, validate:function(v) { return (!isNaN(parseFloat(v)) && v >= 0 && v < 32) }}
+        }
+    });
+</script>
+
+
+
+
+<!-- Blynk Write -->
+<script type="text/x-red" data-template-name="blynk-write">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+   
+    <div class="form-row">
+        <label for="node-input-pin"><i class="fa fa-tasks"></i> Virtual Pin</label>
+        <input type="text" id="node-input-pin" placeholder="number">
+    </div>
+
+
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="blynk-write">
+   <p>Use Blynk Write to send a value to the Blynk app</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-write',{
+        category: 'blynk',      // the palette category
+        paletteLabel: 'write',
+        color: '#3FADB5',
+        icon: 'bridge.png',     
+        align: 'right',
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:0,              // set the number of outputs - 0 to n
+        label: function() {     // sets the default label contents
+            return this.name||this.pin||"no pin";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        defaults: {             // defines the editable properties of the node
+            name: {value:''},   //  along with default values.
+            server: {value:'', type: 'blynk-server'},
+            pin: {value:'', required:true, validate:function(v) { return (!isNaN(parseFloat(v)) && v >= 0 && v < 32) }}
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="blynk-server">
+    <div class="form-row">
+        <label for="node-config-input-key"><i class="icon-bookmark"></i> Project key</label>
+        <input type="text" id="node-config-input-key">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-server', {
+        category: 'config',
+        defaults: {
+			name: {value: ""},
+            key: {value: "", required:true}
+        },
+		label: function() {
+			return("blynk@"+this.key);
+		}
+    });
+</script>
+
