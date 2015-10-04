@@ -26,15 +26,19 @@ module.exports = function(RED) {
 			blynkConnection = new Blynk.Blynk(this.key, options); /* Blynk events */
 			blynkConnection.on('connect', function() {
 				console.log("Blynk ready.");
+				//todo: emit connect and disconnect event to nodes
 			});
 			blynkConnection.on('disconnect', function() {
 				console.log("Blynk Disconnect");
+				//todo
 			});
 			//TODO: error handling
 		} /* =============== Node-Red events ================== */
 		this.on("close", function() {
 			console.log('blynk server close');
 			//TODO: cleanup
+			//blynkConnection.disconnect();
+			pins = [];
 		});
 	}
 	RED.nodes.registerType("blynk-server", BlynkServer);
