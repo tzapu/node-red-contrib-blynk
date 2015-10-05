@@ -3,58 +3,63 @@ module.exports = function(RED) {
 	// require any external libraries we may need....
 	var path = require('path');
 	var Blynk = require('blynk-library');
-	var blynkConnection = null;
-	var blynkConfigNode = null;
-	var pins = [];
+	//var blynkConnections = [];
+	//var blynkConfigNode = null;
+	//var pins = [];
 	// Provide context.global access to node info.
-	RED.settings.functionGlobalContext.blynkPins = pins;
+	//RED.settings.functionGlobalContext.blynkPins = pins;
 	
 	
 	function setupStatusEvents (context) {
-		blynkConnection.on('connect', function() {
-			console.log("Blynk ready in write node.");
+		context.server.blynk.on('connect', function() {
+			console.log("Blynk connect event on node.");
 			context.status({fill:"green",shape:"dot",text:"connected"});
 		});
-		blynkConnection.on('disconnect', function() {
-			console.log("Blynk disconnected in write node.");
+		context.server.blynk.on('disconnect', function() {
+			console.log("Blynk disconnected disconnect event on node.");
 			context.status({fill:"red",shape:"ring",text:"disconnected"});
 		});
 		
 	}
 
 	function BlynkServer(n) {
-		console.log('blynk server init');
+		console.log('blynk server init', n.key);
 		RED.nodes.createNode(this, n);
 		this.key = n.key;
-		
+		this.pins = [];
 		
 		// initialize Blynk or fetch it from the global reference
 		// (used across Node-Red deployments which recreate all the nodes)
 		// so we only get to initialise one single Blynk connection 
 		// only when the node.js VM is starting
-		blynkConfigNode = this;
+		var blynkConfigNode = this;
+		//TODO: this needs to be pooled, should be possible to add more than 1 blynk server
 		
-		if (!blynkConnection) {
+		if (typeof this.blynk === 'undefined') {
 			console.log('New Blynk connection with key', this.key);
 			var options = {
 				certs_path: path.dirname(require.resolve('blynk-library')) + '/certs/'
 			};
-			blynkConnection = new Blynk.Blynk(this.key, options); /* Blynk events */
-			blynkConnection.on('connect', function() {
-				console.log("Blynk ready.");
+			this.blynk = new Blynk.Blynk(this.key, options); /* Blynk events */
+			this.blynk.on('connect', function() {
+				console.log("Blynk ready.", blynkConfigNode.key);
 				//todo: emit connect and disconnect event to nodes
 			});
-			blynkConnection.on('disconnect', function() {
-				console.log("Blynk Disconnect");
+			this.blynk.on('disconnect', function() {
+				console.log("Blynk Disconnect", blynkConfigNode.key);
 				//todo
 			});
+			
 			//TODO: error handling
 		} /* =============== Node-Red events ================== */
 		this.on("close", function() {
-			console.log('blynk server close');
+			console.log('blynk server close', this.key);
 			//TODO: cleanup
 			//blynkConnection.disconnect();
-			pins = [];
+			this.blynk.disconnect();
+			this.blynk.removeAllListeners();
+			this.pins = [];
+			this.blynk = null;
 		});
 	}
 	RED.nodes.registerType("blynk-server", BlynkServer);
@@ -62,11 +67,14 @@ module.exports = function(RED) {
 	function BlynkWriteNode(n) {
 		// Create a RED node
 		RED.nodes.createNode(this, n);
+		//get config node
+		this.server = RED.nodes.getNode(n.server);
 		// Store local copies of the node configuration (as defined in the .html)
 		this.pin = n.pin;
-		if (typeof pins[this.pin] === 'undefined') {
+		
+		if (typeof this.server.pins[this.pin] === 'undefined') {
 			// does not exist
-			pins[this.pin] = new blynkConnection.VirtualPin(this.pin);
+			this.server.pins[this.pin] = new this.server.blynk.VirtualPin(this.pin);
 		} else {
 			// does exist
 		}
@@ -77,7 +85,7 @@ module.exports = function(RED) {
 		this.on("input", function(msg) {
 			console.log('input on virtual write');
 			if (msg.hasOwnProperty("payload")) {
-				pins[node.pin].write(msg.payload);
+				this.server.pins[node.pin].write(msg.payload);
 			} else {
 				node.warn(RED._("blynk.errors.invalid-payload"));
 			}
@@ -90,11 +98,13 @@ module.exports = function(RED) {
 	function BlynkReadEventNode(n) {
 		// Create a RED node
 		RED.nodes.createNode(this, n);
+
 		// Store local copies of the node configuration (as defined in the .html)
+		this.server = RED.nodes.getNode(n.server);
 		this.pin = n.pin;
-		if (typeof pins[this.pin] === 'undefined') {
+		if (typeof this.server.pins[this.pin] === 'undefined') {
 			// does not exist
-			pins[this.pin] = new blynkConnection.VirtualPin(this.pin);
+			this.server.pins[this.pin] = new this.server.blynk.VirtualPin(this.pin);
 		} else {
 			// does exist
 		}
@@ -102,7 +112,7 @@ module.exports = function(RED) {
 		var node = this;
 		setupStatusEvents (node);
 		console.log('blynk virtual pin init', this.pin);
-		pins[this.pin].on('read', function() {
+		this.server.pins[this.pin].on('read', function() {
 			console.log('read on pin', node.pin);
 			var msg = {};
 			msg.pin = node.pin;
@@ -118,10 +128,12 @@ module.exports = function(RED) {
 		// Create a RED node
 		RED.nodes.createNode(this, n);
 		// Store local copies of the node configuration (as defined in the .html)
+		this.server = RED.nodes.getNode(n.server);
 		this.pin = n.pin;
-		if (typeof pins[this.pin] === 'undefined') {
+		
+		if (typeof this.server.pins[this.pin] === 'undefined') {
 			// does not exist
-			pins[this.pin] = new blynkConnection.VirtualPin(this.pin);
+			this.server.pins[this.pin] = new this.server.blynk.VirtualPin(this.pin);
 		} else {
 			// does exist
 		}
@@ -129,7 +141,7 @@ module.exports = function(RED) {
 		var node = this;
 		setupStatusEvents (node);
 		console.log('blynk virtual pin init', this.pin);
-		pins[this.pin].on('write', function(p) {
+		this.server.pins[this.pin].on('write', function(p) {
 			console.log('write on pin', p);
 			var msg = {};
 			msg.pin = node.pin;
