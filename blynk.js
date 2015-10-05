@@ -8,16 +8,32 @@ module.exports = function(RED) {
 	var pins = [];
 	// Provide context.global access to node info.
 	RED.settings.functionGlobalContext.blynkPins = pins;
+	
+	
+	function setupStatusEvents (context) {
+		blynkConnection.on('connect', function() {
+			console.log("Blynk ready in write node.");
+			context.status({fill:"green",shape:"dot",text:"connected"});
+		});
+		blynkConnection.on('disconnect', function() {
+			console.log("Blynk disconnected in write node.");
+			context.status({fill:"red",shape:"ring",text:"disconnected"});
+		});
+		
+	}
 
 	function BlynkServer(n) {
 		console.log('blynk server init');
 		RED.nodes.createNode(this, n);
 		this.key = n.key;
+		
+		
 		// initialize Blynk or fetch it from the global reference
 		// (used across Node-Red deployments which recreate all the nodes)
 		// so we only get to initialise one single Blynk connection 
 		// only when the node.js VM is starting
 		blynkConfigNode = this;
+		
 		if (!blynkConnection) {
 			console.log('New Blynk connection with key', this.key);
 			var options = {
@@ -56,6 +72,7 @@ module.exports = function(RED) {
 		}
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
+		setupStatusEvents (node);
 		console.log('blynk virtual pin write init', this.pin);
 		this.on("input", function(msg) {
 			console.log('input on virtual write');
@@ -83,6 +100,7 @@ module.exports = function(RED) {
 		}
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
+		setupStatusEvents (node);
 		console.log('blynk virtual pin init', this.pin);
 		pins[this.pin].on('read', function() {
 			console.log('read on pin', node.pin);
@@ -109,6 +127,7 @@ module.exports = function(RED) {
 		}
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
+		setupStatusEvents (node);
 		console.log('blynk virtual pin init', this.pin);
 		pins[this.pin].on('write', function(p) {
 			console.log('write on pin', p);
