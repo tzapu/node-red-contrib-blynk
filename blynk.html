@@ -164,8 +164,19 @@
 
 <script type="text/x-red" data-template-name="blynk-server">
     <div class="form-row">
-        <label for="node-config-input-key"><i class="icon-bookmark"></i> Project key</label>
+        <label for="node-config-input-key"><i class="icon-bookmark"></i>Project key</label>
         <input type="text" id="node-config-input-key">
+    </div>
+    <div class="form-row">
+		For local server (leave empty for blynk.cc)
+    </div>    
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="icon-bookmark"></i>Hostname</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="icon-bookmark"></i>Port</label>
+        <input type="text" id="node-config-input-port">
     </div>
 </script>
 
@@ -173,8 +184,10 @@
     RED.nodes.registerType('blynk-server', {
         category: 	'config',
         defaults: 	{
-			name: 	{value: ""},
-            key: 	{value: "", required:true}
+			name: 	{value: ''},
+            key: 	{value: '', required:true},
+            host:   {value: '', required:false},
+            port:	{value: '', required:false}
         },
 		label: 	function() {return("key: " + this.key);}
     });

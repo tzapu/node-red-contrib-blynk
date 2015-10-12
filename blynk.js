@@ -26,6 +26,8 @@ module.exports = function(RED) {
 		console.log('blynk server init', n.key);
 		RED.nodes.createNode(this, n);
 		this.key = n.key;
+		this.addr = n.host;
+		this.port = n.port;
 		this.pins = [];
 		
 		// initialize Blynk or fetch it from the global reference
@@ -40,6 +42,15 @@ module.exports = function(RED) {
 			var options = {
 				certs_path: path.dirname(require.resolve('blynk-library')) + '/certs/'
 			};
+			if(this.addr) {
+				console.log('using host', this.addr);
+				options.addr = this.addr;
+			}
+			if(this.port) {
+				console.log('using port', this.port);
+				options.port = this.port;
+			}
+			
 			this.blynk = new Blynk.Blynk(this.key, options); /* Blynk events */
 			this.blynk.on('connect', function() {
 				console.log("Blynk ready.", blynkConfigNode.key);
@@ -48,6 +59,9 @@ module.exports = function(RED) {
 			this.blynk.on('disconnect', function() {
 				console.log("Blynk Disconnect", blynkConfigNode.key);
 				//todo
+			});
+			this.blynk.on('end', function() {
+				console.log('Blynk end.');
 			});
 			
 			//TODO: error handling
