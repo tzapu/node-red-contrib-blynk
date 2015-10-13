@@ -39,6 +39,7 @@ module.exports = function(RED) {
 		//TODO: this needs to be pooled, should be possible to add more than 1 blynk server
 		
 		if (typeof this.blynk === 'undefined') {
+			
 			console.log('New Blynk connection with key', this.key, this.usessl);
 			var options = {};
 			
@@ -57,6 +58,9 @@ module.exports = function(RED) {
 			}
 			
 			this.blynk = new Blynk.Blynk(this.key, options); /* Blynk events */
+			//is this an ok way of doing it?
+			this.blynk.setMaxListeners(100);
+
 			this.blynk.on('connect', function() {
 				console.log("Blynk ready.", blynkConfigNode.key);
 				//todo: emit connect and disconnect event to nodes
