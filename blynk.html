@@ -208,3 +208,49 @@
 
 
 
+<!-- BLYNK NOTIFY SETTINGS -->
+<script type="text/x-red" data-template-name="blynk-notify">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+    <br/>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<!-- BLYNK NOTIFY HELP -->
+<script type="text/x-red" data-help-name="blynk-notify">
+   <p>
+   		Use Blynk Notify to send a push notification to the Blynk app virtual pin<br />
+   		Make sure you added a push notification widget to the app Dashboard.
+   </p>
+</script>
+
+<!-- BLYNK NOTIFY NODE -->
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-notify',{
+        category: 'blynk',      // the palette category
+        paletteLabel: 'notify',
+        color: 	'#3FADB5',
+        icon: 	'bridge.png',     
+        align: 	'right',
+        inputs:	1,               // set the number of inputs - only 0 or 1
+        outputs:0,              // set the number of outputs - 0 to n
+        label: 	function() {     // sets the default label contents
+            return this.name||"notify";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        defaults: {             // defines the editable properties of the node
+            name: 	{value:''},   //  along with default values.
+            server: {value:'', type: 'blynk-server'}
+        }
+    });
+</script>
+
+
+

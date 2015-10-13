@@ -83,37 +83,6 @@ module.exports = function(RED) {
 	}
 	RED.nodes.registerType("blynk-server", BlynkServer);
 
-	function BlynkWriteNode(n) {
-		// Create a RED node
-		RED.nodes.createNode(this, n);
-		//get config node
-		this.server = RED.nodes.getNode(n.server);
-		// Store local copies of the node configuration (as defined in the .html)
-		this.pin = n.pin;
-		
-		if (typeof this.server.pins[this.pin] === 'undefined') {
-			// does not exist
-			this.server.pins[this.pin] = new this.server.blynk.VirtualPin(this.pin);
-		} else {
-			// does exist
-		}
-		// copy "this" object in case we need it in context of callbacks of other functions.
-		var node = this;
-		setupStatusEvents (node);
-		console.log('blynk virtual pin write init', this.pin);
-		this.on("input", function(msg) {
-			console.log('input on virtual write');
-			if (msg.hasOwnProperty("payload")) {
-				this.server.pins[node.pin].write(msg.payload);
-			} else {
-				node.warn(RED._("blynk.errors.invalid-payload"));
-			}
-		});
-	}
-	// Register the node by name. This must be called before overriding any of the
-	// Node functions.
-	RED.nodes.registerType("blynk-write", BlynkWriteNode);
-
 	function BlynkReadEventNode(n) {
 		// Create a RED node
 		RED.nodes.createNode(this, n);
@@ -171,4 +140,69 @@ module.exports = function(RED) {
 	// Register the node by name. This must be called before overriding any of the
 	// Node functions.
 	RED.nodes.registerType("blynk-write-event", BlynkWriteEventNode);
+	
+	
+	function BlynkWriteNode(n) {
+		// Create a RED node
+		RED.nodes.createNode(this, n);
+		//get config node
+		this.server = RED.nodes.getNode(n.server);
+		// Store local copies of the node configuration (as defined in the .html)
+		this.pin = n.pin;
+		
+		if (typeof this.server.pins[this.pin] === 'undefined') {
+			// does not exist
+			this.server.pins[this.pin] = new this.server.blynk.VirtualPin(this.pin);
+		} else {
+			// does exist
+		}
+		// copy "this" object in case we need it in context of callbacks of other functions.
+		var node = this;
+		setupStatusEvents (node);
+		console.log('blynk virtual pin write init', this.pin);
+		this.on("input", function(msg) {
+			console.log('input on virtual write');
+			if (msg.hasOwnProperty("payload")) {
+				this.server.pins[node.pin].write(msg.payload);
+			} else {
+				node.warn(RED._("blynk.errors.invalid-payload"));
+			}
+		});
+	}
+	// Register the node by name. This must be called before overriding any of the
+	// Node functions.
+	RED.nodes.registerType("blynk-write", BlynkWriteNode);
+
+
+	function BlynkNotifyNode(n) {
+		// Create a RED node
+		RED.nodes.createNode(this, n);
+		//get config node
+		this.server = RED.nodes.getNode(n.server);
+		// Store local copies of the node configuration (as defined in the .html)
+		
+		//if (typeof this.server.pins[this.pin] === 'undefined') {
+			// does not exist
+		//	this.server.pins[this.pin] = new this.server.blynk.VirtualPin(this.pin);
+		//} else {
+			// does exist
+		//}
+		// copy "this" object in case we need it in context of callbacks of other functions.
+		var node = this;
+		setupStatusEvents (node);
+		console.log('blynk virtual pin write init', this.pin);
+		this.on("input", function(msg) {
+			console.log('push notification');
+			if (msg.hasOwnProperty("payload")) {
+				this.server.blynk.notify(msg.payload);
+			} else {
+				node.warn(RED._("blynk.errors.invalid-payload"));
+			}
+		});
+	}
+	// Register the node by name. This must be called before overriding any of the
+	// Node functions.
+	RED.nodes.registerType("blynk-notify", BlynkNotifyNode);
+
+
 }
