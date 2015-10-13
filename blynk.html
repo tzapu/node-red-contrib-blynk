@@ -1,3 +1,44 @@
+<!-- BLYNK SERVER SETTINGS -->
+<script type="text/x-red" data-template-name="blynk-server">
+    <div class="form-row">
+        <label for="node-config-input-key"><i class="icon-bookmark"></i>Project key</label>
+        <input type="text" id="node-config-input-key">
+    </div>
+	<div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" style="display: inline-block; width: auto; vertical-align: top;" id="node-config-input-usessl">
+        <label style="width: 70%;" for="node-config-input-usessl"><span>Use SSL?</span></label>
+    </div>
+    <div class="form-row">
+		For local server (leave empty for blynk.cc)
+    </div>    
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="icon-bookmark"></i>Hostname</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="icon-bookmark"></i>Port</label>
+        <input type="text" id="node-config-input-port">
+    </div>
+</script>
+
+<!-- BLYNK SERVER NODE - INVISIBLE -->
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-server', {
+        category: 	'config',
+        defaults: 	{
+			name: 	{value: ''},
+            key: 	{value: '', required:true},
+            usessl: {value: true},
+            host:   {value: '', required:false},
+            port:	{value: '', required:false}
+        },
+		label: 	function() {return("key: " + this.key);}
+    });
+</script>
+
+<!-- BLYNK READ EVENT -->
+<!-- BLYNK READ EVENT SETTINGS -->
 <!-- First, the content of the edit dialog is defined.                       -->
 <script type="text/x-red" data-template-name="blynk-read-event">
    <!-- data-template-name identifies the node type this is for              -->
@@ -26,7 +67,7 @@
     </div>
 </script>
 
-
+<!-- BLYNK READ EVENT HELP -->
 <!-- Next, some simple help text is provided for the node.                   -->
 <script type="text/x-red" data-help-name="blynk-read-event">
    <!-- data-help-name identifies the node type this help is for             -->
@@ -36,6 +77,7 @@
    <p>Read Event gets called by the Blynk App whenever it needs to get the value of a Pin</p>
 </script>
 
+<!-- BLYNK READ EVENT NODE -->
 <!-- Finally, the node type is registered along with all of its properties   -->
 <!-- The example below shows a small subset of the properties that can be set-->
 <script type="text/javascript">
@@ -63,7 +105,7 @@
 
 
 
-<!-- Blynk Write Event -->
+<!-- BLYNK WRITE EVENT SETTINGS -->
 <script type="text/x-red" data-template-name="blynk-write-event">
     <div class="form-row">
         <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
@@ -83,11 +125,12 @@
     </div>
 </script>
 
-
+<!-- BLYNK WRITE EVENT HELP -->
 <script type="text/x-red" data-help-name="blynk-write-event">
    <p>Write Event gets called by the Blynk App whenever it needs to write/change the value of a Pin</p>
 </script>
 
+<!-- BLYNK WRITE EVENT NODE -->
 <script type="text/javascript">
     RED.nodes.registerType('blynk-write-event',{
         category: 'blynk',      // the palette category
@@ -113,7 +156,7 @@
 
 
 
-<!-- Blynk Write -->
+<!-- BLYNK WRITE SETTINGS -->
 <script type="text/x-red" data-template-name="blynk-write">
     <div class="form-row">
         <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
@@ -134,10 +177,12 @@
     </div>
 </script>
 
+<!-- BLYNK WRITE HELP -->
 <script type="text/x-red" data-help-name="blynk-write">
    <p>Use Blynk Write to send payload to the Blynk app virtual pin</p>
 </script>
 
+<!-- BLYNK WRITE NODE -->
 <script type="text/javascript">
     RED.nodes.registerType('blynk-write',{
         category: 'blynk',      // the palette category
@@ -162,34 +207,4 @@
 </script>
 
 
-<script type="text/x-red" data-template-name="blynk-server">
-    <div class="form-row">
-        <label for="node-config-input-key"><i class="icon-bookmark"></i>Project key</label>
-        <input type="text" id="node-config-input-key">
-    </div>
-    <div class="form-row">
-		For local server (leave empty for blynk.cc)
-    </div>    
-    <div class="form-row">
-        <label for="node-config-input-host"><i class="icon-bookmark"></i>Hostname</label>
-        <input type="text" id="node-config-input-host">
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-port"><i class="icon-bookmark"></i>Port</label>
-        <input type="text" id="node-config-input-port">
-    </div>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('blynk-server', {
-        category: 	'config',
-        defaults: 	{
-			name: 	{value: ''},
-            key: 	{value: '', required:true},
-            host:   {value: '', required:false},
-            port:	{value: '', required:false}
-        },
-		label: 	function() {return("key: " + this.key);}
-    });
-</script>
 

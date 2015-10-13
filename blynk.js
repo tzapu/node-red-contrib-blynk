@@ -26,6 +26,7 @@ module.exports = function(RED) {
 		console.log('blynk server init', n.key);
 		RED.nodes.createNode(this, n);
 		this.key = n.key;
+		this.usessl = n.usessl;
 		this.addr = n.host;
 		this.port = n.port;
 		this.pins = [];
@@ -38,10 +39,14 @@ module.exports = function(RED) {
 		//TODO: this needs to be pooled, should be possible to add more than 1 blynk server
 		
 		if (typeof this.blynk === 'undefined') {
-			console.log('New Blynk connection with key', this.key);
-			var options = {
-				certs_path: path.dirname(require.resolve('blynk-library')) + '/certs/'
-			};
+			console.log('New Blynk connection with key', this.key, this.usessl);
+			var options = {};
+			
+			if(this.usessl) {
+				options.certs_path = path.dirname(require.resolve('blynk-library')) + '/certs/';
+			} else {
+				options.connector = new Blynk.TcpClient();
+			}
 			if(this.addr) {
 				console.log('using host', this.addr);
 				options.addr = this.addr;
