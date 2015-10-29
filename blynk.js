@@ -53,20 +53,23 @@ module.exports = function(RED) {
 			
 			console.log('New Blynk connection with key', this.key, this.usessl);
 			var options = {};
+			var connOptions = {};
 			
-			if(this.usessl) {
-				options.certs_path = path.dirname(require.resolve('blynk-library')) + '/certs/';
-			} else {
-				options.connector = new Blynk.TcpClient();
-			}
 			if(this.addr) {
 				console.log('using host', this.addr);
-				options.addr = this.addr;
+				connOptions.addr = this.addr;
 			}
 			if(this.port) {
 				console.log('using port', this.port);
-				options.port = this.port;
+				connOptions.port = this.port;
 			}
+			
+			if(this.usessl) {
+				options.connector = new Blynk.SslClient(connOptions);
+			} else {
+				options.connector = new Blynk.TcpClient(connOptions);
+			}
+			
 			
 			this.blynk = new Blynk.Blynk(this.key, options); /* Blynk events */
 			//is this an ok way of doing it?

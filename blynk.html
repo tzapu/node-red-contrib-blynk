@@ -33,7 +33,12 @@
             host:   {value: '', required:false},
             port:	{value: '', required:false}
         },
-		label: 	function() {return("key: " + this.key);}
+		label: 	function() { 
+			var h = this.host?this.host:'cloud.blynk.cc';
+			var p = this.port?this.port:'8441';
+			var s = this.usessl?'tls':'tcp';
+			return (s + '://' + h + ':' + p + '/' + this.key);
+		}
     });
 </script>
 
