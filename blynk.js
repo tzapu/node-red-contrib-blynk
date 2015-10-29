@@ -96,6 +96,10 @@ module.exports = function(RED) {
 			this.blynk.disconnect();
 			this.blynk.removeAllListeners();
 			this.pins = [];
+			//cleanup retry timer
+			if(this.blynk.timerConn) {
+				clearInterval(this.blynk.timerConn);
+			}
 			this.blynk = null;
 		});
 	}
