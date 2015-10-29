@@ -14,10 +14,21 @@ module.exports = function(RED) {
 		context.server.blynk.on('connect', function() {
 			console.log("Blynk connect event on node.");
 			context.status({fill:"green",shape:"dot",text:"connected"});
+			context.state = 'connected';
 		});
 		context.server.blynk.on('disconnect', function() {
 			console.log("Blynk disconnected disconnect event on node.");
-			context.status({fill:"red",shape:"ring",text:"disconnected"});
+			if(context.state != 'errored') {
+				context.status({fill:"red",shape:"ring",text:"disconnected"});
+			}
+			context.state = 'connected';
+		});
+		context.server.blynk.on('error', function(err) {
+			console.log("Blynk error event on node.");
+			console.log(context.status);
+			//context.error(err, "");
+			context.status({fill:"red",shape:"ring",text:err});
+			context.state = 'errored';
 		});
 		
 	}
@@ -66,11 +77,11 @@ module.exports = function(RED) {
 				//todo: emit connect and disconnect event to nodes
 			});
 			this.blynk.on('disconnect', function() {
-				console.log("Blynk Disconnect", blynkConfigNode.key);
+				console.log("Blynk Disconnect.", blynkConfigNode.key);
 				//todo
 			});
-			this.blynk.on('end', function() {
-				console.log('Blynk end.');
+			this.blynk.on('error', function(err) {
+				console.log('Blynk error.', blynkConfigNode.key, err);
 			});
 			
 			//TODO: error handling

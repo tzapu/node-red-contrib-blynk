@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-blynk",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Node Red integration with Blynk App and Server",
   "main": "blynk.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/tzapu/node-red-contrib-blynk",
   "dependencies": {
-    "blynk-library": "~0.0.16",
+    "blynk-library": "~0.0.21",
     "path": ""
   },
   "node-red": {
