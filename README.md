@@ -6,4 +6,16 @@ Blynk app integration with Node Red
 If you installed Node Red globally use this to install
 ```npm install --global node-red-contrib-blynk```
 
+Supports both SSL, non SSL connections to blynk.cc and local server.
+
+### Supported events and widgets
+- read event
+- write event
+- write command
+- push notifications
+
+### Blynk App Settings
+Use Raspberry PI as hardware to access 64 virtual pins or Generic Board for 32.
+
 ![ScreenShot](http://i.imgur.com/t7yo9Qj.png)
+
