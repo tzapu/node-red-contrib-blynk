@@ -8,24 +8,38 @@ module.exports = function(RED) {
 	//var pins = [];
 	// Provide context.global access to node info.
 	//RED.settings.functionGlobalContext.blynkPins = pins;
-	
+	function logInfo(node, message) {
+		if(RED.settings.verbose) {
+			node.log(message);
+		}
+	}
+	function logWarn(node, message) {
+		if(RED.settings.verbose) {
+			node.warn(message);
+		}
+	}
+	function logError(node, message) {
+		//if(RED.settings.verbose) {
+			node.error(message);
+		//}
+	}
 	
 	function setupStatusEvents (context) {
 		context.server.blynk.on('connect', function() {
-			console.log("Blynk connect event on node.");
+			logInfo(context, "connected");
 			context.status({fill:"green",shape:"dot",text:"connected"});
 			context.state = 'connected';
 		});
 		context.server.blynk.on('disconnect', function() {
-			console.log("Blynk disconnected disconnect event on node.");
+			logInfo(context, "disconnected");
 			if(context.state != 'errored') {
 				context.status({fill:"red",shape:"ring",text:"disconnected"});
 			}
 			context.state = 'connected';
 		});
 		context.server.blynk.on('error', function(err) {
-			console.log("Blynk error event on node.");
-			console.log(context.status);
+			logError(context, "errored");
+			logError(context, context.status);
 			//context.error(err, "");
 			context.status({fill:"red",shape:"ring",text:err});
 			context.state = 'errored';
@@ -34,7 +48,7 @@ module.exports = function(RED) {
 	}
 
 	function BlynkServer(n) {
-		console.log('blynk server init', n.key);
+		//console.log('blynk server init', n.key);
 		RED.nodes.createNode(this, n);
 		this.key = n.key;
 		this.usessl = n.usessl;
@@ -51,16 +65,16 @@ module.exports = function(RED) {
 		
 		if (typeof this.blynk === 'undefined') {
 			
-			console.log('New Blynk connection with key', this.key, this.usessl);
+			logInfo(blynkConfigNode,'new connection with key: ' + this.key + ' SSL: ' + this.usessl);
 			var options = {};
 			var connOptions = {};
 			
 			if(this.addr) {
-				console.log('using host', this.addr);
+				logInfo(blynkConfigNode, 'using host ' + this.addr);
 				connOptions.addr = this.addr;
 			}
 			if(this.port) {
-				console.log('using port', this.port);
+				logInfo(blynkConfigNode, 'using port ' + this.port);
 				connOptions.port = this.port;
 			}
 			
@@ -76,21 +90,22 @@ module.exports = function(RED) {
 			this.blynk.setMaxListeners(100);
 
 			this.blynk.on('connect', function() {
-				console.log("Blynk ready.", blynkConfigNode.key);
+				//console.log("Server ready.", blynkConfigNode.key);
+				blynkConfigNode.log('key: ' + blynkConfigNode.key + ' connected');
 				//todo: emit connect and disconnect event to nodes
 			});
 			this.blynk.on('disconnect', function() {
-				console.log("Blynk Disconnect.", blynkConfigNode.key);
+				logWarn(blynkConfigNode, "key: " + blynkConfigNode.key + ' disconnected');
 				//todo
 			});
 			this.blynk.on('error', function(err) {
-				console.log('Blynk error.', blynkConfigNode.key, err);
+				logError(blynkConfigNode, 'key: ' +  blynkConfigNode.key + ' reason: ' + err);
 			});
 			
 			//TODO: error handling
 		} /* =============== Node-Red events ================== */
 		this.on("close", function() {
-			console.log('blynk server close', this.key);
+			logInfo(this, 'key: '+  this.key + ' node-red close');
 			//TODO: cleanup
 			//blynkConnection.disconnect();
 			this.blynk.disconnect();
@@ -121,9 +136,9 @@ module.exports = function(RED) {
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
 		setupStatusEvents (node);
-		console.log('blynk virtual pin init', this.pin);
+		logInfo(node, 'on pin ' + this.pin + ' added');
 		this.server.pins[this.pin].on('read', function() {
-			console.log('read on pin', node.pin);
+			logInfo(node, 'on pin ' +  node.pin + ' requested');
 			var msg = {};
 			msg.pin = node.pin;
 			msg.payload = node.pin;
@@ -150,9 +165,9 @@ module.exports = function(RED) {
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
 		setupStatusEvents (node);
-		console.log('blynk virtual pin init', this.pin);
+		logInfo(node, 'on pin ' + this.pin + ' added');
 		this.server.pins[this.pin].on('write', function(p) {
-			console.log('write on pin', p);
+			logInfo(node, 'on pin ' +  node.pin + ' received ' + p);
 			var msg = {};
 			msg.pin = node.pin;
 			msg.payload = p;
@@ -181,10 +196,12 @@ module.exports = function(RED) {
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
 		setupStatusEvents (node);
-		console.log('blynk virtual pin write init', this.pin);
+
+		logInfo(node, 'on pin ' +  node.pin + ' added');
+
 		this.on("input", function(msg) {
-			console.log('input on virtual write');
 			if (msg.hasOwnProperty("payload")) {
+				logInfo(node, 'on pin ' +  node.pin + ' writing ' + msg.payload);
 				this.server.pins[node.pin].write(msg.payload);
 			} else {
 				node.warn(RED._("blynk.errors.invalid-payload"));
@@ -212,10 +229,11 @@ module.exports = function(RED) {
 		// copy "this" object in case we need it in context of callbacks of other functions.
 		var node = this;
 		setupStatusEvents (node);
-		console.log('blynk virtual pin write init', this.pin);
+		logInfo(node, 'on pin ' +  node.pin + ' added');
+		
 		this.on("input", function(msg) {
-			console.log('push notification');
 			if (msg.hasOwnProperty("payload")) {
+				logInfo(node, 'on pin ' +  node.pin + ' notifying ' + msg.payload);
 				this.server.blynk.notify(msg.payload);
 			} else {
 				node.warn(RED._("blynk.errors.invalid-payload"));
