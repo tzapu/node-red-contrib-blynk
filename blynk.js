@@ -250,7 +250,6 @@ module.exports = function(RED) {
 		this.server = RED.nodes.getNode(n.server);
 		// Store local copies of the node configuration (as defined in the .html)
 		this.pin = n.pin;
-		
 		if (typeof this.server.pins[this.pin] === 'undefined') {
 			// does not exist
 			this.server.pins[this.pin] = new this.server.blynk.WidgetLCD(this.pin);
@@ -271,8 +270,13 @@ module.exports = function(RED) {
 					this.server.pins[node.pin].clear();
 					
 				} else {
+					var line = 0;
+					if (msg.topic && !isNaN(msg.topic)){
+						line = msg.topic;						
+					}
+
 					logInfo(node, 'on pin ' +  node.pin + ' printing ' + msg.payload);
-					this.server.pins[node.pin].print(0, 0, msg.payload);
+					this.server.pins[node.pin].print(0, line, msg.payload);
 				}
 			} else {
 				node.warn(RED._("blynk.errors.invalid-payload"));
