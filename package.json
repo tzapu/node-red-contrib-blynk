@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-blynk",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Node Red integration with Blynk App and Server",
   "main": "blynk.js",
   "scripts": {
@@ -12,7 +12,8 @@
   },
   "keywords": [
     "node-red",
-    "blynk"
+    "blynk",
+    "iot"
   ],
   "author": "Alex T <alex@tzapu.com> (http://tzapu.com)",
   "license": "MIT",
@@ -21,7 +22,7 @@
   },
   "homepage": "https://github.com/tzapu/node-red-contrib-blynk",
   "dependencies": {
-    "blynk-library": "~0.0.21",
+    "blynk-library": "~0.0.23",
     "path": ""
   },
   "node-red": {

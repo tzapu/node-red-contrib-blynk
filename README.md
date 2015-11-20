@@ -2,6 +2,7 @@
 Blynk app integration with Node Red
 
 [![NPM](https://nodei.co/npm/node-red-contrib-blynk.png?mini=true)](https://npmjs.org/package/node-red-contrib-blynk)
+[![npm version](https://badge.fury.io/js/node-red-contrib-blynk.svg)](https://badge.fury.io/js/node-red-contrib-blynk)
 
 If you installed Node Red globally use this to install
 ```npm install --global node-red-contrib-blynk```
@@ -12,6 +13,7 @@ Supports both SSL, non SSL connections to blynk.cc and local server.
 - read event
 - write event
 - write command
+- LCD widget (advanced mode)
 - push notifications
 
 ### Blynk App Settings

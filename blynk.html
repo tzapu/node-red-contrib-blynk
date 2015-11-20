@@ -257,5 +257,56 @@
     });
 </script>
 
+<!-- BLYNK LCD PRINT SETTINGS -->
+<script type="text/x-red" data-template-name="blynk-lcd-print">
+    <div class="form-row">
+        <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+        <input type="text" id="node-input-server">
+    </div>
+   
+    <div class="form-row">
+        <label for="node-input-pin"><i class="fa fa-tasks"></i> Virtual Pin</label>
+        <input type="text" id="node-input-pin" placeholder="number">
+    </div>
 
+
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<!-- BLYNK LCD PRINT HELP -->
+<script type="text/x-red" data-help-name="blynk-write">
+   <p>Use LCD Print to send payload to a Blynk app LCD Widget<br/>
+   Send string 'clear-lcd' to clear LCD<br/>
+   Use advanced mode.
+   </p>
+</script>
+
+<!-- BLYNK LCD PRINT NODE -->
+<script type="text/javascript">
+    RED.nodes.registerType('blynk-lcd-print',{
+        category: 'blynk',      // the palette category
+        paletteLabel: 'lcd print',
+        color: 	'#3FADB5',
+        icon: 	'bridge.png',     
+        align: 	'right',
+        inputs:	1,               // set the number of inputs - only 0 or 1
+        outputs:0,              // set the number of outputs - 0 to n
+        label: 	function() {     // sets the default label contents
+            return this.name||this.pin||"no pin";
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        },
+        defaults: {             // defines the editable properties of the node
+            name: 	{value:''},   //  along with default values.
+            server: {value:'', type: 'blynk-server'},
+            pin: 	{value:'', required:true, validate:function(v) { return (!isNaN(parseFloat(v)) && v >= 0 && v < 64) }}
+        }
+    });
+</script>
 

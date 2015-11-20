@@ -212,7 +212,6 @@ module.exports = function(RED) {
 	// Node functions.
 	RED.nodes.registerType("blynk-write", BlynkWriteNode);
 
-
 	function BlynkNotifyNode(n) {
 		// Create a RED node
 		RED.nodes.createNode(this, n);
@@ -243,6 +242,45 @@ module.exports = function(RED) {
 	// Register the node by name. This must be called before overriding any of the
 	// Node functions.
 	RED.nodes.registerType("blynk-notify", BlynkNotifyNode);
+
+
+	function BlynkLCDPrintNode(n) {
+		RED.nodes.createNode(this, n);
+		//get config node
+		this.server = RED.nodes.getNode(n.server);
+		// Store local copies of the node configuration (as defined in the .html)
+		this.pin = n.pin;
+		
+		if (typeof this.server.pins[this.pin] === 'undefined') {
+			// does not exist
+			this.server.pins[this.pin] = new this.server.blynk.WidgetLCD(this.pin);
+		} else {
+			// does exist
+			this.warn(RED._("LCD Pin already in use"));
+		}
+		// copy "this" object in case we need it in context of callbacks of other functions.
+		var node = this;
+		setupStatusEvents (node);
+
+		logInfo(node, 'on pin ' +  node.pin + ' added');
+
+		this.on("input", function(msg) {
+			if (msg.hasOwnProperty("payload")) {
+				if(msg.payload == 'clear-lcd') {
+					logInfo(node, 'on pin ' +  node.pin + ' printing ' + msg.payload);
+					this.server.pins[node.pin].clear();
+					
+				} else {
+					logInfo(node, 'on pin ' +  node.pin + ' printing ' + msg.payload);
+					this.server.pins[node.pin].print(0, 0, msg.payload);
+				}
+			} else {
+				node.warn(RED._("blynk.errors.invalid-payload"));
+			}
+		});	
+	}
+	RED.nodes.registerType("blynk-lcd-print", BlynkLCDPrintNode);
+
 
 
 }
