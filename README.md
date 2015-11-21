@@ -22,5 +22,5 @@ Use Raspberry PI as hardware to access 64 virtual pins or Generic Board for 32.
 ### Debug
 Use the verbose `-v` flag when starting Node-Red to get more information
 
-![ScreenShot](http://i.imgur.com/t7yo9Qj.png)
+![ScreenShot](http://imgur.com/u8bSLf3.png)
 
