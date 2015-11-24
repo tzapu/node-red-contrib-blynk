@@ -240,7 +240,7 @@
         category: 'blynk',      // the palette category
         paletteLabel: 'notify',
         color: 	'#3FADB5',
-        icon: 	'bridge.png',     
+        icon: 	'alert.png',     
         align: 	'right',
         inputs:	1,               // set the number of inputs - only 0 or 1
         outputs:0,              // set the number of outputs - 0 to n
@@ -279,11 +279,12 @@
 </script>
 
 <!-- BLYNK LCD PRINT HELP -->
-<script type="text/x-red" data-help-name="blynk-write">
-   <p>Use LCD Print to send payload to a Blynk app LCD Widget<br/>
-   Send string 'clear-lcd' to clear LCD<br/>
-   Use advanced mode.<br />
-   User msg.topic to set line 0/1
+<script type="text/x-red" data-help-name="blynk-lcd-print">
+   <p>For use with Blynk app LCD Widget<br/>
+   use advanced mode on LCD Widget on ios/android<br/>
+   set message.payload to the text you want displayed<br/>
+   set message.topic to the line you want it shown on (0,1)<br/>
+   set message.payload to 'clear-lcd' if you want to clear it
    </p>
 </script>
 
@@ -293,7 +294,7 @@
         category: 'blynk',      // the palette category
         paletteLabel: 'lcd print',
         color: 	'#3FADB5',
-        icon: 	'bridge.png',     
+        icon: 	'lcd.png',     
         align: 	'right',
         inputs:	1,               // set the number of inputs - only 0 or 1
         outputs:0,              // set the number of outputs - 0 to n
