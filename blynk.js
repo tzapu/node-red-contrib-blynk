@@ -95,7 +95,8 @@ module.exports = function(RED) {
 				//todo: emit connect and disconnect event to nodes
 			});
 			this.blynk.on('disconnect', function() {
-				logWarn(blynkConfigNode, "key: " + blynkConfigNode.key + ' disconnected');
+				//logWarn(blynkConfigNode, "key: " + blynkConfigNode.key + ' disconnected');
+				blynkConfigNode.log("key: " + blynkConfigNode.key + ' disconnected');
 				//todo
 			});
 			this.blynk.on('error', function(err) {
