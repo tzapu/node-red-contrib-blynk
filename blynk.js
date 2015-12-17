@@ -42,7 +42,7 @@ module.exports = function(RED) {
 		});
 		context.server.blynk.on('error', function(err) {
 			logError(context, "errored");
-			logError(context, context.status);
+			//logError(context, context.status);
 			//context.error(err, "");
 			context.status({fill:"red",shape:"ring",text:err});
 			context.state = 'errored';
@@ -112,7 +112,7 @@ module.exports = function(RED) {
 			logInfo(this, 'key: '+  this.key + ' node-red close');
 			//TODO: cleanup
 			//blynkConnection.disconnect();
-			this.blynk.disconnect();
+			this.blynk.disconnect(false);
 			this.blynk.removeAllListeners();
 			this.pins = [];
 			//cleanup retry timer
