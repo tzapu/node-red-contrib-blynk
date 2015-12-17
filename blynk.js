@@ -28,6 +28,9 @@ module.exports = function(RED) {
 		context.server.blynk.on('connect', function() {
 			logInfo(context, "connected");
 			context.status({fill:"green",shape:"dot",text:"connected"});
+			if(context.type == 'bridge' ) {
+                                context.bridge.setAuthToken(context.target);
+                        }
 			context.state = 'connected';
 		});
 		context.server.blynk.on('disconnect', function() {
@@ -35,7 +38,7 @@ module.exports = function(RED) {
 			if(context.state != 'errored') {
 				context.status({fill:"red",shape:"ring",text:"disconnected"});
 			}
-			context.state = 'connected';
+			context.state = 'disconnected';
 		});
 		context.server.blynk.on('error', function(err) {
 			logError(context, "errored");
@@ -286,6 +289,36 @@ module.exports = function(RED) {
 	}
 	RED.nodes.registerType("blynk-lcd-print", BlynkLCDPrintNode);
 
+	 function BlynkBridgeNode(n) {
+		RED.nodes.createNode(this, n);
+		//get config node
+		this.server = RED.nodes.getNode(n.server);
+		// Store local copies of the node configuration (as defined in the .html)
+		this.pin = n.pin;
+                this.type = 'bridge';
+                this.target = n.target;
+		if (typeof this.server.pins[this.pin] === 'undefined') {
+			// does not exist
+                        this.bridge =  new this.server.blynk.WidgetBridge(this.pin);
+		} else {
+			// does exist
+			this.warn(RED._("Bridge Pin already in use"));
+		}
+		// copy "this" object in case we need it in context of callbacks of other functions.
+         
+		var node = this;
+		setupStatusEvents (node);
 
+		logInfo(node, 'on pin ' +  node.pin + ' added');
+
+		this.on("input", function(msg) {
+			if (msg.hasOwnProperty("payload")) {
+				this.bridge.virtualWrite(msg.pin, msg.payload);
+			} else {
+				node.warn(RED._("blynk.errors.invalid-payload"));
+			}
+		});	
+	}
+	RED.nodes.registerType("blynk-bridge", BlynkBridgeNode);
 
 }
