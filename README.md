@@ -1,6 +1,15 @@
 # node-red-contrib-blynk
 Blynk app integration with Node Red
 
+## Websockets version
+Due to some reliability issues reported by some users, together with some new features added by the Blynk team, I started another version of this based on websockets.
+Currently it only works for local servers but it is so much faster and reliable that I am considering packing this one and continuing work only on that one.
+I have not added it to npm yet, but you can find it in the repository below until I decide what to do and get some reports back from testers. If you would like to help, please test it
+
+https://github.com/tzapu/node-red-contrib-blynk-websockets
+
+
+
 [![NPM](https://nodei.co/npm/node-red-contrib-blynk.png?mini=true)](https://npmjs.org/package/node-red-contrib-blynk)
 [![npm version](https://badge.fury.io/js/node-red-contrib-blynk.svg)](https://badge.fury.io/js/node-red-contrib-blynk)
 
