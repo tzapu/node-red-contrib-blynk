@@ -13,6 +13,8 @@ https://github.com/tzapu/node-red-contrib-blynk-websockets
 [![NPM](https://nodei.co/npm/node-red-contrib-blynk.png?mini=true)](https://npmjs.org/package/node-red-contrib-blynk)
 [![npm version](https://badge.fury.io/js/node-red-contrib-blynk.svg)](https://badge.fury.io/js/node-red-contrib-blynk)
 
+
+## Normal Blynk Protocol version
 If you installed Node Red globally use this to install
 ```npm install --global node-red-contrib-blynk```
 
