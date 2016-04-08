@@ -67,7 +67,7 @@ module.exports = function(RED) {
 		//TODO: this needs to be pooled, should be possible to add more than 1 blynk server
 		
 		if (typeof this.blynk === 'undefined') {
-			
+			this.warn("#### \n node-red-contrib-blynk is deprecated. use node-red-contrib-blynk-websockets . \n####");
 			logInfo(blynkConfigNode,'new connection with key: ' + this.key + ' SSL: ' + this.usessl);
 			var options = {};
 			var connOptions = {};

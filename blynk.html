@@ -10,7 +10,7 @@
         <label style="width: 70%;" for="node-config-input-usessl"><span>Use SSL?</span></label>
     </div>
     <div class="form-row">
-		For local server (leave empty for blynk.cc)
+		For local server (leave empty for blynk-cloud.com)
     </div>    
     <div class="form-row">
         <label for="node-config-input-host"><i class="icon-bookmark"></i>Hostname</label>
@@ -34,7 +34,7 @@
             port:	{value: '', required:false}
         },
 		label: 	function() { 
-			var h = this.host?this.host:'cloud.blynk.cc';
+			var h = this.host?this.host:'blynk-cloud.com';
 			var p = this.port?this.port:'8441';
 			var s = this.usessl?'tls':'tcp';
 			return (s + '://' + h + ':' + p + '/' + this.key);

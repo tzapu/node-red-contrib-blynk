@@ -1,11 +1,10 @@
 # node-red-contrib-blynk
 Blynk app integration with Node Red
 
-## Websockets version
-__Due to some reliability issues reported by some users, together with some new features added by the Blynk team, I started another version of this based on websockets.
-Currently it only works for local servers but it is so much faster and reliable that I am considering packing this one and continuing work only on that one.
-I have not added it to npm yet, but you can find it in the repository below until I decide what to do and get some reports back from testers. If you would like to help, please test it__
+# This contrib will no longer be updated. Please use the [websockets version](https://github.com/tzapu/node-red-contrib-blynk-websockets).
 
+## Websockets version
+__Due to some reliability issues reported by some users, together with some new features added by the Blynk team, I started another version of this based on websockets.__
 https://github.com/tzapu/node-red-contrib-blynk-websockets
 
 ## Normal Blynk Protocol version
@@ -16,7 +15,7 @@ https://github.com/tzapu/node-red-contrib-blynk-websockets
 If you installed Node Red globally use this to install
 ```npm install --global node-red-contrib-blynk```
 
-Supports both SSL, non SSL connections to blynk.cc and local server.
+Supports both SSL, non SSL connections to blynk-cloud.com and local server.
 
 ### Supported events and widgets
 - read event
